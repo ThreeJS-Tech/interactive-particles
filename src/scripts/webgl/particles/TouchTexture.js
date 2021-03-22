@@ -39,8 +39,10 @@ export default class TouchTexture {
 		});
 
 		this.trail.forEach((point, i) => {
+			// console.log(point)
 			this.drawTouch(point);
 		});
+
 
 		this.texture.needsUpdate = true;
 	}

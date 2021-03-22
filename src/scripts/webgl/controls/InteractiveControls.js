@@ -13,6 +13,9 @@ export default class InteractiveControls extends EventEmitter {
 
 		this.camera = camera;
 		this.el = el || window;
+		this.interactivePoints = [];
+		this.width = 0;
+		this.height = 0;
 
 		this.plane = new THREE.Plane();
 		this.raycaster = new THREE.Raycaster();
@@ -20,7 +23,7 @@ export default class InteractiveControls extends EventEmitter {
 		this.mouse = new THREE.Vector2();
 		this.offset = new THREE.Vector3();
 		this.intersection = new THREE.Vector3();
-		
+
 		this.objects = [];
 		this.hovered = null;
 		this.selected = null;
@@ -142,7 +145,38 @@ export default class InteractiveControls extends EventEmitter {
 		this.emit('interactive-down', { object: this.hovered, previous: this.selected, intersectionData: this.intersectionData });
 		this.selected = this.hovered;
 
+		const t = (e.touches) ? e.touches[0] : e;
+		const touch = { x: t.clientX, y: t.clientY };
+
+		this.mouse.x = ((touch.x + this.rect.x) / this.rect.width) * 2 - 1;
+		this.mouse.y = -((touch.y + this.rect.y) / this.rect.height) * 2 + 1;
+
+		this.raycaster.setFromCamera(this.mouse, this.camera);
+
+		const intersects = this.raycaster.intersectObjects(this.objects);
+
+		if (intersects.length > 0) {
+			const position = intersects[0].uv;
+			// console.log(intersects[0])
+			const posX = position.x * this.width;
+			const posY = position.y * this.height;
+
+			for (let i = 0; i < this.interactivePoints.length; i++) {
+				let point = this.interactivePoints[i];
+				if (Math.abs(point[0] - posX) < 2 && Math.abs(point[1] - posY) < 2) {
+					console.log("near")
+					// new Audio('../../../../static/mp3/001-voice1-Output-Stereo Out.mp3').play()
+					// new Audio('static/mp3/001-voice1-Output-Stereo Out.mp3').play()
+					let music = document.getElementById("music" + i % 6);
+					music.volume = 0.2;
+					// document.getElementById("musicSrc").src = "https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3";
+					music.play();
+				}
+			}
+		}
+
 		if (this.selected) {
+
 			if (this.raycaster.ray.intersectPlane(this.plane, this.intersection)) {
 				this.offset.copy(this.intersection).sub(this.selected.position);
 			}
@@ -157,7 +191,7 @@ export default class InteractiveControls extends EventEmitter {
 
 	onLeave(e) {
 		this.onUp(e);
-		
+
 		this.emit('interactive-out', { object: this.hovered });
 		this.hovered = null;
 	}

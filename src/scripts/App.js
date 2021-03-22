@@ -52,7 +52,7 @@ export default class App {
 	}
 
 	draw() {
-		if (this.webgl) this.webgl.draw();
+			if (this.webgl) this.webgl.draw();
 		if (this.gui.stats) this.gui.stats.end();
 	}
 
@@ -70,6 +70,6 @@ export default class App {
 	}
 
 	click(e) {
-		this.webgl.next();
+		// this.webgl.next();
 	}
 }

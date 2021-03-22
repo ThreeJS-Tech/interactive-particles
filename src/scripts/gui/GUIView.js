@@ -10,7 +10,7 @@ export default class GUIView {
 		this.particlesRandom = 2;
 		this.particlesDepth = 4;
 		this.particlesSize = 1.5;
-		
+
 		this.touchRadius = 0.15;
 
 		this.range = [0, 1];
@@ -29,15 +29,15 @@ export default class GUIView {
 		this.controlKit = new ControlKit();
 		this.controlKit.addPanel({ width: 300, enable: false })
 
-		.addGroup({label: 'Touch', enable: true })
-		.addCanvas({ label: 'trail', height: 64 })
-		.addSlider(this, 'touchRadius', 'rangeRadius', { label: 'radius', onChange: this.onTouchChange.bind(this) })
-		
-		.addGroup({label: 'Particles', enable: true })
-		// .addCheckbox(this, 'particlesHitArea', { label: 'hit area', onChange: this.onParticlesChange.bind(this) })
-		.addSlider(this, 'particlesRandom', 'rangeRandom', { label: 'random', onChange: this.onParticlesChange.bind(this) })
-		.addSlider(this, 'particlesDepth', 'rangeDepth', { label: 'depth', onChange: this.onParticlesChange.bind(this) })
-		.addSlider(this, 'particlesSize', 'rangeSize', { label: 'size', onChange: this.onParticlesChange.bind(this) })
+			.addGroup({ label: 'Touch', enable: true })
+			.addCanvas({ label: 'trail', height: 64 })
+			.addSlider(this, 'touchRadius', 'rangeRadius', { label: 'radius', onChange: this.onTouchChange.bind(this) })
+
+			.addGroup({ label: 'Particles', enable: true })
+			// .addCheckbox(this, 'particlesHitArea', { label: 'hit area', onChange: this.onParticlesChange.bind(this) })
+			.addSlider(this, 'particlesRandom', 'rangeRandom', { label: 'random', onChange: this.onParticlesChange.bind(this) })
+			.addSlider(this, 'particlesDepth', 'rangeDepth', { label: 'depth', onChange: this.onParticlesChange.bind(this) })
+			.addSlider(this, 'particlesSize', 'rangeSize', { label: 'size', onChange: this.onParticlesChange.bind(this) })
 
 		// store reference to canvas
 		const component = this.controlKit.getComponentBy({ label: 'trail' });
@@ -91,7 +91,7 @@ export default class GUIView {
 
 		this.app.webgl.particles.touch.radius = this.touchRadius;
 	}
-	
+
 	onParticlesChange() {
 		if (!this.app.webgl) return;
 		if (!this.app.webgl.particles) return;
@@ -99,6 +99,7 @@ export default class GUIView {
 		this.app.webgl.particles.object3D.material.uniforms.uRandom.value = this.particlesRandom;
 		this.app.webgl.particles.object3D.material.uniforms.uDepth.value = this.particlesDepth;
 		this.app.webgl.particles.object3D.material.uniforms.uSize.value = this.particlesSize;
+		this.app.webgl.particles.object3D_red.material.uniforms.uSize.value = this.particlesSize * 2;
 
 		this.app.webgl.particles.hitArea.material.visible = this.particlesHitArea;
 	}
